@@ -30,9 +30,12 @@ img{
     cursor: pointer;
     border:1px solid black;
 }
-.Search{
-    padding:10px;
-}
+
 .res-logo {
     width:100%;
+}
+
+.filter-btn{
+    margin:10px;
+    cursor: pointer;
 }
