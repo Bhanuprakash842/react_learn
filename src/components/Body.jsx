@@ -1,16 +1,48 @@
 import RestaurantCard from "./RestaurantCard";
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 //We should not put the hard coded data in our components files
 import resList from "../utils/mockData";
-
+import Shimmer from "../components/Shimmer";
 const Body = () =>{
-    const arr = useState(resList);
+    const arr = useState([]);
     const [listOfRestaurants,setListOfRestaurants] = arr;
-    return (
+
+    // useEffect(()=>{
+    //   console.log("Use Effect")
+    // },[]);//this will printed after rendering is completed 
+    useEffect(()=>{
+      fetchData();
+    },[]);
+    const fetchData = async() =>{
+      const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=17.385044&lng=78.486671&page_type=DESKTOP_WEB_LISTING");
+      //We cannot access directly due to the cors so we need to install the Allow CORS Extension
+      const json = await data.json();
+      console.log(json);
+      setListOfRestaurants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
+      //This is not the good way to have the data
+      //Here comes the topic Optional Chaining
+    }
+
+    // console.log("rendered");//it will be printed First
+
+
+    //This is called a Conditional Rendering
+    // if(listOfRestaurants.length === 0){
+    //   return (
+    //     <Shimmer/>
+    //   )
+    // }
+
+
+    //Using the spinner is not a good practice instead of spinner nowadays the shimmer UI is used.
+    //Shimmer UI is modern approach in which we will return fake UI of same layout of our webpage
+
+
+    return listOfRestaurants.length === 0 ? <Shimmer/> : (
       <div className="body">
       <div className="filter">
         <button className="filter-btn" onClick={()=>{
-            const filteredList = listOfRestaurants.filter((res)=> res.avgRating > 4);
+            const filteredList = listOfRestaurants.filter((res)=> res.info.avgRating >= 4.5);
             setListOfRestaurants(filteredList);
         }}>
             Top Rated Restaurants
@@ -18,9 +50,13 @@ const Body = () =>{
             </div>
       <div className="res-container">
           
-           { listOfRestaurants.map((restaurant)=>(
-            <RestaurantCard key={resList.id} resData = {restaurant}/>
-            ))} 
+      {Array.isArray(listOfRestaurants) && listOfRestaurants.length > 0 ? (
+          listOfRestaurants.map((restaurant) => (
+            <RestaurantCard key={restaurant.info.id} resData={restaurant.info} />
+          ))
+        ) : (
+          <p>No restaurants available</p>
+        )}
            {/*
             If we use index as key
             { resList.data.map((restaurant,index)=>(
