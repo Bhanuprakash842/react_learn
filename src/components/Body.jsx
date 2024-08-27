@@ -6,6 +6,8 @@ import Shimmer from "../components/Shimmer";
 const Body = () =>{
     const arr = useState([]);
     const [listOfRestaurants,setListOfRestaurants] = arr;
+  const [filteredRestaurant,setfilteredRestaurant] = useState([]);
+    const [searchText,setSearchText] = useState("");
 
     // useEffect(()=>{
     //   console.log("Use Effect")
@@ -19,6 +21,7 @@ const Body = () =>{
       const json = await data.json();
       console.log(json);
       setListOfRestaurants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
+      setfilteredRestaurant(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
       //This is not the good way to have the data
       //Here comes the topic Optional Chaining
     }
@@ -41,6 +44,22 @@ const Body = () =>{
     return listOfRestaurants.length === 0 ? <Shimmer/> : (
       <div className="body">
       <div className="filter">
+        <input type="text" className="search-box" value={searchText} onChange={(e)=>{
+          setSearchText(e.target.value);
+          //We use this because without this input is not taken in text box so we have to update the value if there is any change in the value
+          //When we are updating the value it will render each time how many times the value changes .
+          //But the rendering will be very fast that we cannot notice the changes in UI
+        }}/>
+        <button onClick={()=>{
+          //Filter the restaurant cards and update the UI
+          //searchText
+          console.log(searchText);
+
+          const filteredRestaurant = listOfRestaurants.filter((res)=> 
+            res.info.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setListOfRestaurants(filteredRestaurant);
+        }}>Search</button>
         <button className="filter-btn" onClick={()=>{
             const filteredList = listOfRestaurants.filter((res)=> res.info.avgRating >= 4.5);
             setListOfRestaurants(filteredList);
@@ -51,7 +70,7 @@ const Body = () =>{
       <div className="res-container">
           
       {Array.isArray(listOfRestaurants) && listOfRestaurants.length > 0 ? (
-          listOfRestaurants.map((restaurant) => (
+          filteredRestaurant.map((restaurant) => (
             <RestaurantCard key={restaurant.info.id} resData={restaurant.info} />
           ))
         ) : (
