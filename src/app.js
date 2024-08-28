@@ -60,7 +60,10 @@ import ReactDOM from "react-dom/client"
 // );
 //JSX will  prevent cross side scripting attacks
 import Header from "./components/Header";//We can also use Header.jsx
-
+import { createBrowserRouter ,RouterProvider ,Outlet} from "react-router-dom";
+import About from "./components/About";
+import Contact from "./components/Contact";
+import Error from "./components/Error";
 // const styleCard = {
 //   backgroundColor : "#f0f0f0",
 // };
@@ -70,10 +73,34 @@ import Body from "./components/Body";
 const AppLayout = () =>{
   return (<div className="app">
     <Header/>
-    <Body/>
+    <Outlet/>
   </div>)
 }
 
+const appRouter = createBrowserRouter([
+  {
+    path:"/",
+    element:<AppLayout/>,
+    children:[
+      {
+        path:"/",
+        element:<Body/>,
+      },
+      {
+        path:"/about",
+        element:
+        <About/>
+      },
+      {
+        path:"/contact",
+        element:<Contact/>,
+      },
+    ],
+    errorElement:<Error/>,
+  },
+  
+]);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<AppLayout/>);
+root.render(<RouterProvider router = {appRouter}/>);
 
