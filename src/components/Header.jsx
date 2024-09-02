@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 const Header = () => {
   let btnName = "Login"; //Local variables cannot used to change the state of Data
   const [btnNameReact, setbtnNameReact] = useState("Login");
-  console.log("Header render");
+  // console.log("Header render");
 
   //if no dependency array => useEffect is called on every render
   //if dependency array is empty =[] => useEffect will be called on initial render(just once)
   //if dependency array is [btNameReact] => called everytime btnNameReact is updated
   useEffect(() => {
-    console.log("useEffect called");
+    // console.log("useEffect called");
   }, [btnNameReact]);
 
   return (

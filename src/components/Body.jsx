@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 //We should not put the hard coded data in our components files
 import resList from "../utils/mockData";
 import Shimmer from "../components/Shimmer";
+import { Link } from "react-router-dom";
+
+
 const Body = () => {
   const arr = useState([]);
   const [listOfRestaurants, setListOfRestaurants] = arr;
@@ -89,10 +92,12 @@ const Body = () => {
       <div className="res-container">
         {Array.isArray(listOfRestaurants) && listOfRestaurants.length > 0 ? (
           filteredRestaurant.map((restaurant) => (
-            <RestaurantCard
-              key={restaurant.info.id}
+            <Link 
+            key={restaurant.info.id}
+            to={"/restaurants/"+restaurant.info.id}><RestaurantCard
+              
               resData={restaurant.info}
-            />
+            /></Link>
           ))
         ) : (
           <p>No restaurants available</p>
