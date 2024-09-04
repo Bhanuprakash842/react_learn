@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import resList from "../utils/mockData";
 import Shimmer from "../components/Shimmer";
 import { Link } from "react-router-dom";
-
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   const arr = useState([]);
@@ -46,6 +46,14 @@ const Body = () => {
 
   //Using the spinner is not a good practice instead of spinner nowadays the shimmer UI is used.
   //Shimmer UI is modern approach in which we will return fake UI of same layout of our webpage
+
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false)
+    return (
+      <h1>
+        Looks like you're offline !! Please check your internet connection;
+      </h1>
+    );
 
   return listOfRestaurants.length === 0 ? (
     <Shimmer />
@@ -92,12 +100,12 @@ const Body = () => {
       <div className="res-container">
         {Array.isArray(listOfRestaurants) && listOfRestaurants.length > 0 ? (
           filteredRestaurant.map((restaurant) => (
-            <Link 
-            key={restaurant.info.id}
-            to={"/restaurants/"+restaurant.info.id}><RestaurantCard
-              
-              resData={restaurant.info}
-            /></Link>
+            <Link
+              key={restaurant.info.id}
+              to={"/restaurants/" + restaurant.info.id}
+            >
+              <RestaurantCard resData={restaurant.info} />
+            </Link>
           ))
         ) : (
           <p>No restaurants available</p>

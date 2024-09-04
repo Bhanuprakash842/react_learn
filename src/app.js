@@ -7,7 +7,7 @@
    </div>
    ReactElement(Object)  -> HTML(Browser Understands)
  */
-import React, { createElement } from "react";
+import React, { createElement, Suspense } from "react";
 import ReactDOM from "react-dom/client"
 // const parent = React.createElement("div", { id: "parent" }, [React.createElement("div", { id: "child" },[ React.createElement("h1", {}, "This is react"),React.createElement("h2", {}, "I am an h2 tag")]),React.createElement("div", { id: "child2" },[ React.createElement("h1", {}, "I am an h1 tag"),React.createElement("h2", {}, "I am an h2 tag")])]);
 // const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -72,7 +72,17 @@ import RestaurantMenu from "./components/RestaurantMenu";
 import RestaurantCard from "./components/RestaurantCard";
 import Body from "./components/Body";
 import RestaurantMenu from "./components/RestaurantMenu";
+import Grocery from "./components/Grocery";
 //can also write Body.jsx
+
+//Lazy Loading
+//on demand loading'
+import {lazy,Suspense} from "react";
+
+const Grocery = lazy(() => import("./components/Grocery"));
+
+const About = lazy(()=>import("./components/About"));
+
 const AppLayout = () =>{
   return (<div className="app">
     <Header/>
@@ -91,12 +101,15 @@ const appRouter = createBrowserRouter([
       },
       {
         path:"/about",
-        element:
-        <About/>
+        element:<Suspense><About/></Suspense>
       },
       {
         path:"/contact",
         element:<Contact/>,
+      },
+      {
+        path:"/grocery",
+        element:<Suspense fallback={<h1>Loading...</h1>}><Grocery/></Suspense>,
       },
       {
         path:"/restaurants/:resId",
